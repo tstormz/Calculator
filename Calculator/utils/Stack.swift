@@ -20,13 +20,10 @@ class Stack<T> {
 	private var head: Item<T>?
 	
 	func push(_ value: T) {
-		if isEmpty() {
-			head = Item(value)
-		} else {
-			let temp = head
-			head = Item(value)
-			head!.next = temp
-		}
+		let item = Item(value)
+		let temp = head
+		head = item
+		item.next = temp
 	}
 	
 	func pop() -> T? {
