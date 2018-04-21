@@ -8,14 +8,8 @@
 
 import Foundation
 
-class Result : Operand {
-	private var result: Double = 0
-	
-	init() {
-		super.init(0)
-	}
-	
-	override func getValue() -> Double {
-		return result
-	}
-}
+/*
+	Wrapper class around Operand - used to distinguish between a
+		button pressed and the output of a calculator
+*/
+class Result : Operand {}

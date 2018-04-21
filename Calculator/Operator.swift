@@ -19,13 +19,45 @@ class Operator : PostfixToken {
 		case low
 	}
 	
+	enum Op {
+		case plus
+		case minus
+		case multiply
+		case divide
+	}
+	
+	let op: Op
 	let associativity: Associativity
 	let precedence: Precedence
 	let reduce: (Double, Double) -> Double
 	
-	init(associativity: Associativity, precedence: Precedence, perform reduction: @escaping (Double, Double) -> Double) {
-		self.associativity = associativity
-		self.precedence = precedence
-		reduce = reduction
+	init(_ op: String) {
+		if (op == "+") {
+			self.op = .plus
+		} else if (op == "-") {
+			self.op = .minus
+		} else if (op == "/") {
+			self.op = .divide
+		} else {
+			self.op = .multiply
+		}
+		switch self.op {
+		case .plus:
+			associativity = .left
+			precedence = .low
+			reduce = { (x: Double, y: Double) -> Double in return x + y }
+		case .minus:
+			associativity = .left
+			precedence = .low
+			reduce = { (x: Double, y: Double) -> Double in return x - y }
+		case .multiply:
+			associativity = .left
+			precedence = .high
+			reduce = { (x: Double, y: Double) -> Double in return x * y }
+		case .divide:
+			associativity = .left
+			precedence = .high
+			reduce = { (x: Double, y: Double) -> Double in return x / y }
+		}
 	}
 }
