@@ -8,4 +8,6 @@
 
 import Foundation
 
-protocol PostfixToken {}
+protocol PostfixToken {
+	func toString() -> String
+}

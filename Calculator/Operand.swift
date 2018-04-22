@@ -18,4 +18,8 @@ class Operand : PostfixToken {
 	func getValue() -> Double {
 		return value
 	}
+	
+	func toString() -> String {
+		return String(value)
+	}
 }

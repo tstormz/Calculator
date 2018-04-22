@@ -10,9 +10,17 @@ import UIKit
 
 class ViewController: UIViewController {
 	private var buffer: String = ""
+	private var opToButtonMap = [String: UIButton]()
 	
 	var calculator = Calculator()
+	
+	// MARK: Components
 	@IBOutlet weak var result: UILabel!
+	@IBOutlet weak var plusButton: UIButton!
+	@IBOutlet weak var minusButton: UIButton!
+	@IBOutlet weak var multiplyButton: UIButton!
+	@IBOutlet weak var divideButton: UIButton!
+	
 	
 	// MARK: Actions
 	@IBAction func clear(_ sender: UIButton) {
@@ -61,25 +69,26 @@ class ViewController: UIViewController {
 		addNumber("9")
 	}
 	
+	@IBAction func addDecimal(_ sender: UIButton) {
+		addNumber(".")
+	}
+	
 	@IBAction func addPlus(_ sender: UIButton) {
-		calculator.addToken(createOperand())
-		calculator.addToken(Operator("+"))
+		addOperator("+")
 	}
 	
 	@IBAction func addMinus(_ sender: UIButton) {
-		calculator.addToken(createOperand())
-		calculator.addToken(Operator("-"))
+		addOperator("-")
 	}
 	
 	@IBAction func addMultiply(_ sender: UIButton) {
-		calculator.addToken(createOperand())
-		calculator.addToken(Operator("*"))
+		addOperator("*")
 	}
 	
 	@IBAction func addDivide(_ sender: UIButton) {
-		calculator.addToken(createOperand())
-		calculator.addToken(Operator("/"))
+		addOperator("/")
 	}
+	
 	@IBAction func calculate(_ sender: UIButton) {
 		// Add the last input number
 		calculator.addToken(createOperand())
@@ -88,12 +97,15 @@ class ViewController: UIViewController {
 		// Evaluate the current expression
 		calculator.eval()
 		// Print the output
-		result.text = String(format: "%.8f", calculator.result.getValue())
+		result.text = String(format: "%f", calculator.result.getValue())
 	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		// Do any additional setup after loading the view, typically from a nib.
+		opToButtonMap["+"] = plusButton
+		opToButtonMap["-"] = minusButton
+		opToButtonMap["*"] = multiplyButton
+		opToButtonMap["/"] = divideButton
 	}
 
 	override func didReceiveMemoryWarning() {
@@ -112,6 +124,27 @@ class ViewController: UIViewController {
 	private func addNumber(_ i: String) {
 		buffer += i
 		result.text = buffer
+		clearButtonColors()
+	}
+	
+	private func addOperator(_ op: String) {
+		clearButtonColors()
+		if let button = opToButtonMap[op] {
+			button.backgroundColor = UIColor.blue
+		}
+		if buffer != "" {
+			calculator.addToken(createOperand())
+		}
+		if calculator.lastTokenWasOperator() {
+			calculator.discardOperator()
+		}
+		calculator.addToken(Operator(op))
+	}
+	
+	private func clearButtonColors() {
+		for (_, button) in opToButtonMap {
+			button.backgroundColor = UIColor.black
+		}
 	}
 }
 

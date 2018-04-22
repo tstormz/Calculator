@@ -289,6 +289,9 @@
                                                         <state key="normal" title=".">
                                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </state>
+                                                        <connections>
+                                                            <action selector="addDecimal:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ISU-dW-xQg"/>
+                                                        </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pai-99-ekw">
                                                         <rect key="frame" x="95" y="0.0" width="90.5" height="80"/>
@@ -329,6 +332,10 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="divideButton" destination="78u-A4-Y7l" id="w9O-1X-vgo"/>
+                        <outlet property="minusButton" destination="j1Y-zF-s1K" id="TCF-UZ-KxP"/>
+                        <outlet property="multiplyButton" destination="rCp-IH-kuR" id="6RJ-BD-Mhq"/>
+                        <outlet property="plusButton" destination="eGt-dv-hRk" id="gCv-OQ-vR0"/>
                         <outlet property="result" destination="bb8-c6-hPY" id="0R9-UQ-Fxw"/>
                     </connections>
                 </viewController>

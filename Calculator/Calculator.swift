@@ -42,6 +42,7 @@ class Calculator {
 	}
 	
 	func addToken(_ token: PostfixToken) {
+		infixExpression += token.toString()
 		if let op = token as? Operator {
 			var opsNeedToBePushed: Bool = !operatorStack.isEmpty()
 			while opsNeedToBePushed {
@@ -69,5 +70,14 @@ class Calculator {
 		while !operatorStack.isEmpty() {
 			postfixExpression.push(operatorStack.pop()!)
 		}
+	}
+	
+	func lastTokenWasOperator() -> Bool {
+		let operators = ["+", "-", "*", "/"]
+		return operators.contains(String(infixExpression.last!))
+	}
+	
+	func discardOperator() {
+		_ = operatorStack.pop()
 	}
 }

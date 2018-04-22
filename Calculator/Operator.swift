@@ -22,11 +22,13 @@ class Operator : PostfixToken {
 	}
 	
 	let op: Op
+	let opString: String
 	let associativity: Associativity
 	let precedence: Int
 	let reduce: (Double, Double) -> Double
 	
 	init(_ op: String) {
+		opString = op
 		if (op == "+") {
 			self.op = .plus
 		} else if (op == "-") {
@@ -54,5 +56,9 @@ class Operator : PostfixToken {
 			precedence = 1
 			reduce = { (x: Double, y: Double) -> Double in return x / y }
 		}
+	}
+	
+	func toString() -> String {
+		return opString
 	}
 }
