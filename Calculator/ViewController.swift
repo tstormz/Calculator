@@ -9,8 +9,19 @@
 import UIKit
 
 class ViewController: UIViewController {
+	private class ButtonState {
+		static let OPERATOR = 0
+		static let OPERAND = 1
+		static let EQUAL = 2
+		static let NONE = 3
+		
+		var last = NONE
+		var lastOp = ""
+	}
+	
 	private var buffer: String = ""
 	private var opToButtonMap = [String: UIButton]()
+	private var buttonPresses: ButtonState = ButtonState()
 	
 	var calculator = Calculator()
 	
@@ -20,7 +31,6 @@ class ViewController: UIViewController {
 	@IBOutlet weak var minusButton: UIButton!
 	@IBOutlet weak var multiplyButton: UIButton!
 	@IBOutlet weak var divideButton: UIButton!
-	
 	
 	// MARK: Actions
 	@IBAction func clear(_ sender: UIButton) {
@@ -98,6 +108,7 @@ class ViewController: UIViewController {
 		calculator.eval()
 		// Print the output
 		result.text = String(format: "%f", calculator.result.getValue())
+		buttonPresses.last = ButtonState.EQUAL
 	}
 	
 	override func viewDidLoad() {
@@ -122,13 +133,19 @@ class ViewController: UIViewController {
 	}
 	
 	private func addNumber(_ i: String) {
+		if buttonPresses.last == ButtonState.OPERATOR {
+			clearButtonColor(op: buttonPresses.lastOp)
+		}
 		buffer += i
 		result.text = buffer
-		clearButtonColors()
 	}
 	
 	private func addOperator(_ op: String) {
-		clearButtonColors()
+		if buttonPresses.last == ButtonState.EQUAL {
+			calculator.pushResultOntoStack()
+		} else if buttonPresses.last == ButtonState.OPERATOR {
+			clearButtonColor(op: buttonPresses.lastOp)
+		}
 		if let button = opToButtonMap[op] {
 			button.backgroundColor = UIColor.blue
 		}
@@ -139,10 +156,12 @@ class ViewController: UIViewController {
 			calculator.discardOperator()
 		}
 		calculator.addToken(Operator(op))
+		buttonPresses.last = ButtonState.OPERATOR
+		buttonPresses.lastOp = op
 	}
 	
-	private func clearButtonColors() {
-		for (_, button) in opToButtonMap {
+	private func clearButtonColor(op: String) {
+		if let button = opToButtonMap[op] {
 			button.backgroundColor = UIColor.black
 		}
 	}

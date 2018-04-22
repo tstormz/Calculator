@@ -80,4 +80,8 @@ class Calculator {
 	func discardOperator() {
 		_ = operatorStack.pop()
 	}
+	
+	func pushResultOntoStack() {
+		operandStack.push(result)
+	}
 }
