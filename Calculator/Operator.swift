@@ -14,11 +14,6 @@ class Operator : PostfixToken {
 		case right
 	}
 	
-	enum Precedence {
-		case high
-		case low
-	}
-	
 	enum Op {
 		case plus
 		case minus
@@ -28,7 +23,7 @@ class Operator : PostfixToken {
 	
 	let op: Op
 	let associativity: Associativity
-	let precedence: Precedence
+	let precedence: Int
 	let reduce: (Double, Double) -> Double
 	
 	init(_ op: String) {
@@ -44,19 +39,19 @@ class Operator : PostfixToken {
 		switch self.op {
 		case .plus:
 			associativity = .left
-			precedence = .low
+			precedence = 0
 			reduce = { (x: Double, y: Double) -> Double in return x + y }
 		case .minus:
 			associativity = .left
-			precedence = .low
+			precedence = 0
 			reduce = { (x: Double, y: Double) -> Double in return x - y }
 		case .multiply:
 			associativity = .left
-			precedence = .high
+			precedence = 1
 			reduce = { (x: Double, y: Double) -> Double in return x * y }
 		case .divide:
 			associativity = .left
-			precedence = .high
+			precedence = 1
 			reduce = { (x: Double, y: Double) -> Double in return x / y }
 		}
 	}
