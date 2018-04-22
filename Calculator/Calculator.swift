@@ -24,27 +24,29 @@ class Calculator {
 		while !postfixExpression.isEmpty() {
 			let token = postfixExpression.poll()
 			if let op = token as?  Operator {
-				let operandTwo = operandStack.pop()
-				let operandOne = operandStack.pop()
-				let result = Operand(op.reduce(operandOne!.getValue(), operandTwo!.getValue()))
-				operandStack.push(result)
+				if let operandTwo = operandStack.pop() {
+					if let operandOne = operandStack.pop() {
+						let result = Operand(op.reduce(operandOne.getValue(), operandTwo.getValue()))
+						operandStack.push(result)
+					}
+				}
 			} else if let operand = token as? Operand {
 				operandStack.push(operand)
 			} else {
 				// Error
 			}
 		}
-		self.result = Result(operandStack.pop()!.getValue())
+		if !operandStack.isEmpty() {
+			self.result = Result(operandStack.pop()!.getValue())
+		}
 	}
 	
 	func addToken(_ token: PostfixToken) {
 		if let op = token as? Operator {
-			var opsNeedToBePushed = !operatorStack.isEmpty()
-			print("starting loop")
+			var opsNeedToBePushed: Bool = !operatorStack.isEmpty()
 			while opsNeedToBePushed {
 				let nextOp = operatorStack.peek()
 				if let precedence = nextOp?.precedence {
-					print("top: \(nextOp!.op) [\(nextOp!.precedence)]")
 					if precedence > op.precedence {
 						postfixExpression.push(operatorStack.pop()!)
 					} else if precedence == op.precedence && nextOp!.associativity == .left {
@@ -53,6 +55,7 @@ class Calculator {
 				} else {
 					opsNeedToBePushed = false
 				}
+				opsNeedToBePushed = opsNeedToBePushed && operatorStack.isEmpty()
 			}
 			operatorStack.push(op)
 		} else if let number = token as? Operand {

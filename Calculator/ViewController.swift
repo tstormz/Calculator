@@ -9,83 +9,80 @@
 import UIKit
 
 class ViewController: UIViewController {
+	private var buffer: String = ""
 	
 	var calculator = Calculator()
 	@IBOutlet weak var result: UILabel!
 	
 	// MARK: Actions
-	
 	@IBAction func clear(_ sender: UIButton) {
 		calculator = Calculator()
 		result.text = "0"
+		buffer = ""
 	}
 	
 	@IBAction func addZero(_ sender: UIButton) {
-		calculator.addToken(Operand(0))
-		result.text = "0"
+		addNumber("0")
 	}
 	
 	@IBAction func addOne(_ sender: UIButton) {
-		calculator.addToken(Operand(1))
-		result.text = "1"
+		addNumber("1")
 	}
 	
 	@IBAction func addTwo(_ sender: UIButton) {
-		calculator.addToken(Operand(2))
-		result.text = "2"
+		addNumber("2")
 	}
 	
 	@IBAction func addThree(_ sender: UIButton) {
-		calculator.addToken(Operand(3))
-		result.text = "3"
+		addNumber("3")
 	}
 	
 	@IBAction func addFour(_ sender: UIButton) {
-		calculator.addToken(Operand(4))
-		result.text = "4"
+		addNumber("4")
 	}
 	
 	@IBAction func addFive(_ sender: UIButton) {
-		calculator.addToken(Operand(5))
-		result.text = "5"
+		addNumber("5")
 	}
 	
 	@IBAction func addSix(_ sender: UIButton) {
-		calculator.addToken(Operand(6))
-		result.text = "6"
+		addNumber("6")
 	}
 	
 	@IBAction func addSeven(_ sender: UIButton) {
-		calculator.addToken(Operand(7))
-		result.text = "7"
+		addNumber("7")
 	}
 	
 	@IBAction func addEight(_ sender: UIButton) {
-		calculator.addToken(Operand(8))
-		result.text = "8"
+		addNumber("8")
 	}
 	
 	@IBAction func addNine(_ sender: UIButton) {
-		calculator.addToken(Operand(9))
-		result.text = "9"
+		addNumber("9")
 	}
 	
 	@IBAction func addPlus(_ sender: UIButton) {
+		calculator.addToken(createOperand())
 		calculator.addToken(Operator("+"))
 	}
 	
 	@IBAction func addMinus(_ sender: UIButton) {
+		calculator.addToken(createOperand())
 		calculator.addToken(Operator("-"))
 	}
 	
 	@IBAction func addMultiply(_ sender: UIButton) {
+		calculator.addToken(createOperand())
 		calculator.addToken(Operator("*"))
 	}
 	
 	@IBAction func addDivide(_ sender: UIButton) {
+		calculator.addToken(createOperand())
 		calculator.addToken(Operator("/"))
 	}
 	@IBAction func calculate(_ sender: UIButton) {
+		// Add the last input number
+		calculator.addToken(createOperand())
 		// Flush any operators not pushed to the queue
 		calculator.flushOperatorStack()
 		// Evaluate the current expression
@@ -103,7 +100,18 @@ class ViewController: UIViewController {
 		super.didReceiveMemoryWarning()
 		// Dispose of any resources that can be recreated.
 	}
-
-
+	
+	// MARK: Private Methods
+	private func createOperand() -> Operand {
+		let operand = Operand(Double(buffer)!)
+		// Clear the buffer
+		buffer = ""
+		return operand
+	}
+	
+	private func addNumber(_ i: String) {
+		buffer += i
+		result.text = buffer
+	}
 }
 

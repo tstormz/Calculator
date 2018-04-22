@@ -66,5 +66,5 @@ class CalculatorTests: XCTestCase {
 //		c.eval()
 //		XCTAssert(c.result.getValue() == 5.0)
 //	}
-		
+	
 }
