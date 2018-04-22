@@ -106,13 +106,14 @@ class ViewController: UIViewController {
 		calculator.flushOperatorStack()
 		// Evaluate the current expression
 		calculator.eval()
-		// Print the output
-		result.text = String(format: "%f", calculator.result.getValue())
+		// Append the result to the result string
+		result.text = formatDouble(calculator.result.getValue())
 		buttonPresses.last = ButtonState.EQUAL
 	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		// Load our buttons into the map
 		opToButtonMap["+"] = plusButton
 		opToButtonMap["-"] = minusButton
 		opToButtonMap["*"] = multiplyButton
@@ -133,37 +134,65 @@ class ViewController: UIViewController {
 	}
 	
 	private func addNumber(_ i: String) {
+		// If the last button pressed was a operator, turn off it's highlighting
 		if buttonPresses.last == ButtonState.OPERATOR {
 			clearButtonColor(op: buttonPresses.lastOp)
 		}
 		buffer += i
-		result.text = buffer
+		if buttonPresses.last == ButtonState.NONE {
+			result.text! = i
+		} else {
+			result.text! += i
+		}
 	}
 	
 	private func addOperator(_ op: String) {
 		if buttonPresses.last == ButtonState.EQUAL {
+			// If the last button pressed was an Equal then the user is trying
+			//   to chain the result into a new expression
 			calculator.pushResultOntoStack()
 		} else if buttonPresses.last == ButtonState.OPERATOR {
+			// If the last button pressed was another operator the user is trying
+			//   to overwrite the previous operator
 			clearButtonColor(op: buttonPresses.lastOp)
+			calculator.undoOperator()
 		}
+		// Highlight the button
 		if let button = opToButtonMap[op] {
 			button.backgroundColor = UIColor.blue
 		}
+		// If there is anything in the buffer, create an operand and throw it on the stack
 		if buffer != "" {
 			calculator.addToken(createOperand())
 		}
-		if calculator.lastTokenWasOperator() {
-			calculator.discardOperator()
-		}
+		// Create and throw the operator onto the stack
 		calculator.addToken(Operator(op))
+		// Set the last button pressed and which operator was selected
 		buttonPresses.last = ButtonState.OPERATOR
 		buttonPresses.lastOp = op
+		result.text! += op
 	}
 	
 	private func clearButtonColor(op: String) {
 		if let button = opToButtonMap[op] {
 			button.backgroundColor = UIColor.black
 		}
+	}
+	
+	private func formatDouble(_ d: Double) -> String {
+		var s = String(format: "%f", d)
+		if let decimal = s.index(of: ".") {
+			let afterDecimal = s[decimal...]
+			var allZeros = true
+			for n in afterDecimal {
+				print(n)
+				allZeros = allZeros && n == "0" || n == "."
+			}
+			if allZeros {
+				s = String(s[..<decimal])
+			}
+		}
+		return s
 	}
 }
 

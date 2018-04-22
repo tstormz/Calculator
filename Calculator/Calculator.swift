@@ -72,12 +72,7 @@ class Calculator {
 		}
 	}
 	
-	func lastTokenWasOperator() -> Bool {
-		let operators = ["+", "-", "*", "/"]
-		return operators.contains(String(infixExpression.last!))
-	}
-	
-	func discardOperator() {
+	func undoOperator() {
 		_ = operatorStack.pop()
 	}
 	
